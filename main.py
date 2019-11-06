@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
+import requests
+#import guilhermeV
+import lissaV
+
+#guilhermeV.mainGui()
+
+lissaV.mainLissa()
 
 
-soup = BeautifulSoup(html_doc, 'html.parser')
-
-print(soup.prettify())
