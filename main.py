@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
-#import guilhermeV
-import lissaV
+import scraping
 
-#guilhermeV.mainGui()
 
-lissaV.mainLissa()
+scraping.getVagas()
 
 
