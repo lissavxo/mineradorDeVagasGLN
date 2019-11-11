@@ -7,10 +7,16 @@ DATA: 05/11/2019
 from bs4 import BeautifulSoup
 import requests
 
-def getVagas():
+def get_soup():
   url = 'https://empregos.profissionaisti.com.br/vagas/distrito-federal/'
   site = requests.get(url)
   soup = BeautifulSoup(site.content, 'html.parser')
+  return soup
+
+def getVagas():
+
+  soup = get_soup()
+
   nome_vagas = []
   link_vagas = []
   codigo_vagas = []
@@ -21,10 +27,15 @@ def getVagas():
   
 
     
-  print("---------")
-
+ 
+  
   for box in soup.find_all('div', class_="job-list-content"):
     
+    
+    print("----------------------------------------------------")
+    
+
+    print(" ")
     soupBox = BeautifulSoup(str(box), 'html.parser') #objeto soup para o box da vaga
     soupDetails = BeautifulSoup(str(soupBox.find('div',class_="job-icons clearfix")), 'html.parser') #objeto soup para a div dos detalhes da vaga
   
@@ -33,7 +44,6 @@ def getVagas():
     titulo = soupBox.h4.string
     link = soupBox.a['href']
     codigo = soupBox.a['href'].split('/')[-2]
-
     cont = 0
     for atributo in soupDetails.find_all('a'):
       if atributo.get('title') != None:
@@ -43,7 +53,6 @@ def getVagas():
           local = atributo.get('title')
         cont+=1 
     data = soupDetails.find('a',class_="nolink").get_text() 
-
     conjunto_de_atribuicoes_vaga = []
     for item in soupBox.find_all('span', class_="label"): 
       texto = item.get_text().strip()
@@ -73,7 +82,8 @@ def getVagas():
 
     print("Atribuicoes da Vaga: ")
     print("----> {}".format(conjunto_de_atribuicoes_vaga[0]))
-    print("----> {}".format(conjunto_de_atribuicoes_vaga[1]))
+    print("----> {}\n".format(conjunto_de_atribuicoes_vaga[1]))
+
 
 
    
