@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
 
@@ -16,6 +17,7 @@ def soup_box(soup):
         box_list.append(box)
     return box_list
 
+
 #Lista contendo empresa, local e tag da vaga
 def soup_details(soup):  #
     lista = []
@@ -25,6 +27,7 @@ def soup_details(soup):  #
             if x != None:
                 lista.append(x)
     return lista
+
 
 #funcao retorna lista de titulos
 def get_titles(soup_box):
@@ -72,9 +75,6 @@ def get_dates(soup):
         data = item.get_text().strip()
         dates.append(data)
     return dates
-
-
-
 
 
 #Retorna empresa da vaga
