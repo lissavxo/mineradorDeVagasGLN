@@ -39,7 +39,6 @@ def get_codes(box_soup):
     codes.append(int(code))
 
   return codes 
-  
 
 
 
@@ -78,7 +77,10 @@ def empresa(empresa_local_area):
     empresa_vaga = []
     controle_tamanho = len(empresa_local_area)
     for indice in range(0, controle_tamanho, 3):
-        empresa_vaga.append(empresa_local_area[indice])
+        item = list(empresa_local_area[indice])
+        del item [0:9]
+        item = ''.join(item)
+        empresa_vaga.append(item)
     return empresa_vaga
 
 
@@ -87,7 +89,10 @@ def local(empresa_local_area):
     local_vaga = []
     controle_tamanho = len(empresa_local_area)
     for indice in range(1, controle_tamanho, 3):
-        local_vaga.append(empresa_local_area[indice])
+        item = list(empresa_local_area[indice])
+        del item [0:9]
+        item = ''.join(item)
+        local_vaga.append(item)
     return local_vaga
 
 
@@ -96,5 +101,8 @@ def area(empresa_local_area):
     area_vaga = []
     controle_tamanho = len(empresa_local_area)
     for indice in range(2, controle_tamanho, 3):
-        area_vaga.append(empresa_local_area[indice])
+        item = list(empresa_local_area[indice])
+        del item [0:11]
+        item = ''.join(item)
+        area_vaga.append(item)
     return area_vaga
