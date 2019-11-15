@@ -26,6 +26,7 @@ def get_vagas():
     salaries = funcoes.get_salario(soup, links)
     regimes = funcoes.get_regime(funcoes.soup_label(soup))
     periodos = funcoes.get_periodo(funcoes.soup_label(soup))
+    descricoes = funcoes.get_descricao(soup, links)
 
     # faz uma lista de dicionarios de vagas
     vagas = []
@@ -42,7 +43,8 @@ def get_vagas():
                     "Tag": tags[i],
                     "Salary": salaries[i],
                     "Regime": regimes[i],
-                    "Periodo": periodos[i]
+                    "Período": periodos[i],
+                    "Descrição": descricoes[i]
                 }
             }
             vagas.append(vagas_dict)

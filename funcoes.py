@@ -149,3 +149,19 @@ def get_salario(soup, links):
                 salarios = ['Não informado!']
         lista_salarios.append(salarios[0])
     return lista_salarios
+
+
+# Retorna com uma lista com a descrição das vagas
+def get_descricao(soup, links):
+    lista_descricoes = []
+    for url in links:
+        lista_de_p = []
+        time.sleep(2)
+        soup_internal_dialog = get_soup(url)
+        for item in soup_internal_dialog.find_all('div', class_="job-content"):
+            for item2 in item.find_all('p', class_=""):
+                p = item2.get_text()
+                p = p.replace(u'\xa0', u'')
+                lista_de_p.append(p)
+            lista_descricoes.append(str(lista_de_p))
+    return lista_descricoes
