@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-import time
+
 
 
 # funçao para retornar uma soup de toda a pagina a partir da url
@@ -138,7 +138,7 @@ def get_tags(soup_details):
 def get_salario(soup, links):
     lista_salarios = []
     for url in links:
-        time.sleep(2)
+        
         soup_internal_dialog = get_soup(url)
         lista_de_p = []
         for item in soup_internal_dialog.find_all('p'):
@@ -152,11 +152,12 @@ def get_salario(soup, links):
 
 
 # Retorna com uma lista com a descrição das vagas
+# a descricao esta organizada em topicos, cada topico e um intem de uma lista por vaga
 def get_descricao(soup, links):
     lista_descricoes = []
     for url in links:
         lista_de_p = []
-        time.sleep(2)
+        
         soup_internal_dialog = get_soup(url)
         for item in soup_internal_dialog.find_all('div', class_="job-content"):
             for item2 in item.find_all('p', class_=""):
