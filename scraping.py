@@ -3,17 +3,13 @@ AUTORES:  Lissa Ximenes, Guilherme Ferreira
 DATA: 05/11/2019
 
 '''
-from bs4 import BeautifulSoup
-import requests
 import funcoes
 import json
 from datetime import date
 
 
-def get_vagas(lim = 2):
+def get_vagas(lim=2):
 
-
-    
     titles = []
     links = []
     codes = []
@@ -26,14 +22,13 @@ def get_vagas(lim = 2):
     periodos = []
     descricoes = []
 
-
-    
-    page=1
+    page = 1
     while(True):
-        
-        print("Page: %s" %page)
+
+        print("Page: %s" % page)
         # atribuindo valores as variaveis atributos
-        soup = funcoes.get_soup('https://empregos.profissionaisti.com.br/vagas/distrito-federal/'+'?p='+str(page))
+        soup = funcoes.get_soup(
+            'https://empregos.profissionaisti.com.br/vagas/distrito-federal/'+'?p='+str(page))
         titles.extend(funcoes.get_titles(funcoes.soup_box(soup)))
         links.extend(funcoes.get_links(soup))
         codes.extend(funcoes.get_codes(funcoes.soup_box(soup)))
@@ -46,19 +41,17 @@ def get_vagas(lim = 2):
         periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup)))
         descricoes.extend(funcoes.get_descricao(soup, links))
         # verifica data e controla o loop para a alteracao de paginas buscadas
-        if(date_verification(dates[-1],lim)==False):
-            print("Breaking in page: %s" %str(page+1))
-            print(dates[-1]) 
+        if(date_verification(dates[-1], lim) == False):
+            print("Breaking in page: %s" % str(page+1))
+            print(dates[-1])
             break
-        page+=1
-
+        page += 1
 
     # faz uma lista de dicionarios de vagas
     vagas = []
-    
 
     for i in range(len(titles) - 1):
-        if date_verification(dates[i],lim):
+        if date_verification(dates[i], lim):
             vagas_dict = {
                 codes[i]: {
                     "Titulo": titles[i],
@@ -88,8 +81,7 @@ def date_verification(data_vaga, lim=2):
     data_vaga = data_vaga.split('/')
     mes_vaga = data_vaga[1]
     mes_atual = date.today().month
-   
-    
+
     if int(mes_vaga) >= mes_atual - lim:
         return True
     else:

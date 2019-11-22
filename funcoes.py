@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 
 
-
 # funçao para retornar uma soup de toda a pagina a partir da url
 def get_soup(url):
 
@@ -138,7 +137,7 @@ def get_tags(soup_details):
 def get_salario(soup, links):
     lista_salarios = []
     for url in links:
-        
+
         soup_internal_dialog = get_soup(url)
         lista_de_p = []
         for item in soup_internal_dialog.find_all('p'):
@@ -157,12 +156,11 @@ def get_descricao(soup, links):
     lista_descricoes = []
     for url in links:
         lista_de_p = []
-        
         soup_internal_dialog = get_soup(url)
         for item in soup_internal_dialog.find_all('div', class_="job-content"):
             for item2 in item.find_all('p', class_=""):
                 p = item2.get_text()
                 p = p.replace(u'\xa0', u'')
-                lista_de_p.append(p)
-            lista_descricoes.append(str(lista_de_p))
+                lista_de_p.append(str(p))
+            lista_descricoes.append(' '.join(lista_de_p))
     return lista_descricoes
