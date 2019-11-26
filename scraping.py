@@ -48,7 +48,7 @@ def get_vagas(lim=2):
         page += 1
 
     # faz uma lista de dicionarios de vagas
-    vagas = []
+    vagas = {}
 
     for i in range(len(titles) - 1):
         if date_verification(dates[i], lim):
@@ -66,7 +66,9 @@ def get_vagas(lim=2):
                     "Descrição": descricoes[i]
                 }
             }
-            vagas.append(vagas_dict)
+            # vagas.append(vagas_dict)
+            
+            vagas = {**vagas, **vagas_dict}
     return vagas
 
 
