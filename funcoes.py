@@ -137,7 +137,6 @@ def get_tags(soup_details):
 def get_salario(soup, links):
     lista_salarios = []
     for url in links:
-
         soup_internal_dialog = get_soup(url)
         lista_de_p = []
         for item in soup_internal_dialog.find_all('p'):
@@ -154,6 +153,41 @@ def get_salario(soup, links):
 # a descricao esta organizada em topicos, cada topico e um intem de uma lista por vaga
 def get_descricao(soup, links):
     lista_descricoes = []
+    tags_chave = ["REQUISITOS", "PRAZO", "FORMAÇÃO", "CONHECIMENTOS", "ATRIBUIÇÕES", "COMPETÊNCIAS", "BENEFÍCIOS", "EXIGÊNCIAS",
+                  "RESPONSABILIDADES", "ATRIBUIÇÕES", "QUALIFICAÇÕES"]
+    for url in links:
+        lista_referencia = []
+        lista_descricao = []
+        soup_internal_dialog = get_soup(url)
+        for item in soup_internal_dialog.find_all('div', class_="job-content"):
+            for item2 in item.find_all('p', class_=""):
+                frase_referencia = item2.get_text().upper()
+                frase = str(item2)
+                frase = frase.replace(u'\xa0', u'')
+                frase = frase.replace("<br>", "\n")
+                frase = frase.replace("<br/>", "\n")
+                frase = frase.replace("</br>", "\n")
+                frase = BeautifulSoup(frase, "html.parser")
+                frase = frase.get_text().strip()
+                for i in tags_chave:
+                    if i in frase_referencia:
+                        if len(lista_referencia) > 0:
+                            if i not in lista_referencia:
+                                lista_referencia.append(frase_referencia)
+                                lista_descricao.append(frase)
+                            break
+                        else:
+                            lista_referencia.append(frase_referencia)
+                            lista_descricao.append(frase)
+                            break
+            lista_descricoes.append(' '.join(lista_descricao))
+    return lista_descricoes
+
+
+'''
+#Antiga forma de pegar as descrições
+def get_descricao(soup, links):
+    lista_descricoes = []
     for url in links:
         lista_de_p = []
         soup_internal_dialog = get_soup(url)
@@ -164,3 +198,4 @@ def get_descricao(soup, links):
                 lista_de_p.append(str(p))
             lista_descricoes.append(' '.join(lista_de_p))
     return lista_descricoes
+'''
