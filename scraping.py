@@ -23,12 +23,13 @@ def get_vagas(lim=2):
     descricoes = []
 
     page = 1
-    while(True):
+    while (True):
 
         print("Page: %s" % page)
         # atribuindo valores as variaveis atributos
         soup = funcoes.get_soup(
-            'https://empregos.profissionaisti.com.br/vagas/distrito-federal/'+'?p='+str(page))
+            'https://empregos.profissionaisti.com.br/vagas/distrito-federal/' +
+            '?p=' + str(page))
         titles.extend(funcoes.get_titles(funcoes.soup_box(soup)))
         links.extend(funcoes.get_links(soup))
         codes.extend(funcoes.get_codes(funcoes.soup_box(soup)))
@@ -41,13 +42,13 @@ def get_vagas(lim=2):
         periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup)))
         descricoes.extend(funcoes.get_descricao(soup, links))
         # verifica data e controla o loop para a alteracao de paginas buscadas
-        if(date_verification(dates[-1], lim) == False):
-            print("Breaking in page: %s" % str(page+1))
+        if (date_verification(dates[-1], lim) == False):
+            print("Breaking in page: %s" % str(page + 1))
             print(dates[-1])
             break
         page += 1
 
-    # faz uma lista de dicionarios de vagas
+
     vagas = {}
 
     for i in range(len(titles) - 1):
@@ -67,14 +68,24 @@ def get_vagas(lim=2):
                 }
             }
             # vagas.append(vagas_dict)
-            
+
             vagas = {**vagas, **vagas_dict}
     return vagas
 
 
-def vagas_to_dict(vagas_dict):
+def vagas_to_json(vagas_dict):
     with open('vagas.json', 'w') as json_file:
         json.dump(vagas_dict, json_file, ensure_ascii=False)
+    
+
+def last_sended(vagas=['oi','i','fe']):
+  arquivo = './files/last_sended.txt'
+
+  file = open(arquivo, 'w')
+  file.write("my love")
+  file.close()
+
+  
 
 
 def date_verification(data_vaga, lim=2):
@@ -88,3 +99,7 @@ def date_verification(data_vaga, lim=2):
         return True
     else:
         return False
+
+
+
+last_sended()
