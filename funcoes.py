@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
-
+# ------------------------------------------------------------------------------------------------------------
 # funçao para retornar uma soup de toda a pagina a partir da url
 def get_soup(url):
 
@@ -27,19 +27,39 @@ def soup_details(soup):  #
             if x != None:
                 lista.append(x)
     return lista
+# ----------------------------------------------------------------------------------------------
 
+# ----------------------------------------------------------------------------------------------
 
 # Retorna o regime de trabalho e o período
-def soup_label(soup):
+def soup_label(soup,lim_vagas= 0):
+    internal_value = lim_vagas
+    internal_count = 0
+    internal_bol = False
+    if internal_value != 0:
+        internal_bol = True
     conjunto_de_atribuicoes_vaga = []
     for item in soup.find_all('span', class_="label"):
-        texto = item.get_text().strip()
-        conjunto_de_atribuicoes_vaga.append(texto)
+        if internal_bol:
+            if internal_count <= lim_vagas:
+                texto = item.get_text().strip()
+                conjunto_de_atribuicoes_vaga.append(texto)
+            else:
+                return conjunto_de_atribuicoes_vaga
+                
+            internal_count+=1
+        else:
+
+            texto = item.get_text().strip()
+            conjunto_de_atribuicoes_vaga.append(texto)
+        
+        
+
     return conjunto_de_atribuicoes_vaga
 
 
 # funcao retorna lista de titulos
-def get_titles(soup_box):
+def get_titles(soup_box,lim_vagas= 0):
     titles = []
     for box in soup_box:
         text = box.h4.get_text()
@@ -48,7 +68,7 @@ def get_titles(soup_box):
 
 
 # funcao retorna lista de links de vaga
-def get_links(soup):
+def get_links(soup,lim_vagas= 0):
     links = []
     links_soup = BeautifulSoup(str(soup.find_all('h4')), 'html.parser')
     for link in links_soup.select('a'):
@@ -57,19 +77,32 @@ def get_links(soup):
 
 
 # funcao retorna lista de codigos da vaga
-def get_codes(soup_box):
+def get_codes(soup_box,lim_vagas= 0):
+
+    def last_sendend_verification(code):
+        try:
+            file = open('./files/last_sendend.txt') 
+            last_code = int(file.readlines()[0])
+
+            if code == last_code :
+                return False
+        except:
+            return True
+
     codes = []
     for box in soup_box:
         code = list(box.get('id'))
         del code[0:5]
         code = ''.join(code)
+        if last_sendend_verification(code) == False:
+            return codes , True # keep atention HEERE  
         codes.append(int(code))
+    return codes , False
 
-    return codes
 
 
 # Retorna o regime de trabalho
-def get_regime(soup_label):
+def get_regime(soup_label,lim_vagas= 0):
     regimes = []
     controle_tamanho = len(soup_label)
     for indice in range(0, controle_tamanho, 2):
@@ -79,7 +112,7 @@ def get_regime(soup_label):
 
 
 # Retorna o período de trabalho
-def get_periodo(soup_label):
+def get_periodo(soup_label,lim_vagas= 0):
     periodos = []
     controle_tamanho = len(soup_label)
     for indice in range(1, controle_tamanho, 2):
@@ -89,7 +122,7 @@ def get_periodo(soup_label):
 
 
 # Retorna a data da publicação
-def get_dates(soup):
+def get_dates(soup,lim_vagas= 0):
     dates = []
     for item in soup.find_all('a', class_="nolink"):
         data = item.get_text().strip()
@@ -98,7 +131,7 @@ def get_dates(soup):
 
 
 # Retorna empresa da vaga
-def get_companies(soup_details):
+def get_companies(soup_details,lim_vagas= 0):
     companies = []
     controle_tamanho = len(soup_details)
     for indice in range(0, controle_tamanho, 3):
@@ -110,7 +143,7 @@ def get_companies(soup_details):
 
 
 # Retorna local da vaga
-def get_locals(soup_details):
+def get_locals(soup_details,lim_vagas= 0):
     locais = []
     controle_tamanho = len(soup_details)
     for indice in range(1, controle_tamanho, 3):
@@ -122,7 +155,7 @@ def get_locals(soup_details):
 
 
 # Retorna tag da vaga
-def get_tags(soup_details):
+def get_tags(soup_details,lim_vagas= 0):
     tags = []
     controle_tamanho = len(soup_details)
     for indice in range(2, controle_tamanho, 3):
@@ -134,7 +167,7 @@ def get_tags(soup_details):
 
 
 # Retorna com uma lista dos salários
-def get_salario(soup, links):
+def get_salario(soup, links,lim_vagas= 0):
     lista_salarios = []
     for url in links:
         soup_internal_dialog = get_soup(url)
@@ -151,7 +184,7 @@ def get_salario(soup, links):
 
 # Retorna com uma lista com a descrição das vagas
 # a descricao esta organizada em topicos, cada topico e um intem de uma lista por vaga
-def get_descricao(soup, links):
+def get_descricao(soup, links,lim_vagas= 0):
     lista_descricoes = []
     tags_chave = ["REQUISITOS", "PRAZO", "FORMAÇÃO", "CONHECIMENTOS", "ATRIBUIÇÕES", "COMPETÊNCIAS", "BENEFÍCIOS", "EXIGÊNCIAS",
                   "RESPONSABILIDADES", "ATRIBUIÇÕES", "QUALIFICAÇÕES"]

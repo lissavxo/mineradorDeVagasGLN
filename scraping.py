@@ -30,17 +30,24 @@ def get_vagas(lim=2):
         soup = funcoes.get_soup(
             'https://empregos.profissionaisti.com.br/vagas/distrito-federal/' +
             '?p=' + str(page))
-        titles.extend(funcoes.get_titles(funcoes.soup_box(soup)))
-        links.extend(funcoes.get_links(soup))
-        codes.extend(funcoes.get_codes(funcoes.soup_box(soup)))
-        dates.extend(funcoes.get_dates(soup))
-        companies.extend(funcoes.get_companies(funcoes.soup_details(soup)))
-        locais.extend(funcoes.get_locals(funcoes.soup_details(soup)))
-        tags.extend(funcoes.get_tags(funcoes.soup_details(soup)))
-        salaries.extend(funcoes.get_salario(soup, links))
-        regimes.extend(funcoes.get_regime(funcoes.soup_label(soup)))
-        periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup)))
-        descricoes.extend(funcoes.get_descricao(soup, links))
+
+        # testanto o tamanho da lista de codes 
+        codes = funcoes.get_codes(funcoes.soup_box(soup))
+        lim_vagas = 0
+        if codes[1]:
+            lim_vagas = len(codes[0])
+        
+        titles.extend(funcoes.get_titles(funcoes.soup_box(soup,lim_vagas)))
+        links.extend(funcoes.get_links(soup,lim_vagas))
+        codes.extend(codes[0])
+        dates.extend(funcoes.get_dates(soup,lim_vagas))
+        companies.extend(funcoes.get_companies(funcoes.soup_details(soup,lim_vagas)))
+        locais.extend(funcoes.get_locals(funcoes.soup_details(soup,lim_vagas)))
+        tags.extend(funcoes.get_tags(funcoes.soup_details(soup,lim_vagas)))
+        salaries.extend(funcoes.get_salario(soup, links,lim_vagas))
+        regimes.extend(funcoes.get_regime(funcoes.soup_label(soup,lim_vagas)))
+        periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup,lim_vagas)))
+        descricoes.extend(funcoes.get_descricao(soup, links,lim_vagas))
         # verifica data e controla o loop para a alteracao de paginas buscadas
         if (date_verification(dates[-1], lim) == False):
             print("Breaking in page: %s" % str(page + 1))
@@ -78,12 +85,23 @@ def vagas_to_json(vagas_dict):
         json.dump(vagas_dict, json_file, ensure_ascii=False)
     
 
-def last_sended(vagas=['oi','i','fe']):
+def last_sended():
   arquivo = './files/last_sended.txt'
 
-  file = open(arquivo, 'w')
-  file.write("my love")
-  file.close()
+  try:
+    flag_permission = 'r'
+    file = open(arquivo, flag_permission)
+    print(file.readlines())
+  except:
+    flag_permission = 'w'
+    file = open(arquivo, flag_permission)
+    file.write('2233')
+    
+  finally:
+    file.close()
+
+
+
 
   
 
