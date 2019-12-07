@@ -7,8 +7,8 @@ def bot_run():
     with open('vagas.json') as file_data:
         vagas = json.load(file_data)
 
-        for vaga in vagas:
-            vaga = vagas[vaga]
+        for code_vaga in vagas:
+            vaga = vagas[code_vaga]
 
             message = '{}\n{}\n{} - {} - {}\n{}\n{}\n{} - {}\n\n{}\n'.format(vaga['Titulo'],vaga["Link"],vaga["Data"],vaga["Empresa"],vaga[ "Local"],vaga[ "Tag"],vaga["Salary"],vaga[ "Regime"],vaga["Período"],vaga["Descrição"])
 
