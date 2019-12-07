@@ -6,7 +6,7 @@ DATA: 05/11/2019
 import funcoes
 import json
 from datetime import date
-
+import file_handler_functions as files
 
 def get_vagas(lim=2):
 
@@ -31,30 +31,36 @@ def get_vagas(lim=2):
             'https://empregos.profissionaisti.com.br/vagas/distrito-federal/' +
             '?p=' + str(page))
 
+        # funcoes que se repetem 
+
+        details = funcoes.soup_details(soup)
+
         # testanto o tamanho da lista de codes 
-        codes = funcoes.get_codes(funcoes.soup_box(soup))
+        _codes = funcoes.get_codes(funcoes.soup_box(soup))
+        codes_bool = _codes[1]
+        _codes = _codes[0]
         lim_vagas = 0
-        if codes[1]:
-            lim_vagas = len(codes[0])
+        if codes_bool:
+            lim_vagas = len(_codes)
         
-        titles.extend(funcoes.get_titles(funcoes.soup_box(soup,lim_vagas)))
+        titles.extend(funcoes.get_titles( funcoes.soup_box(soup) ,lim_vagas))
         links.extend(funcoes.get_links(soup,lim_vagas))
-        codes.extend(codes[0])
+        codes.extend(_codes)
         dates.extend(funcoes.get_dates(soup,lim_vagas))
-        companies.extend(funcoes.get_companies(funcoes.soup_details(soup,lim_vagas)))
-        locais.extend(funcoes.get_locals(funcoes.soup_details(soup,lim_vagas)))
-        tags.extend(funcoes.get_tags(funcoes.soup_details(soup,lim_vagas)))
-        salaries.extend(funcoes.get_salario(soup, links,lim_vagas))
-        regimes.extend(funcoes.get_regime(funcoes.soup_label(soup,lim_vagas)))
-        periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup,lim_vagas)))
-        descricoes.extend(funcoes.get_descricao(soup, links,lim_vagas))
-        # verifica data e controla o loop para a alteracao de paginas buscadas
-        if (date_verification(dates[-1], lim) == False):
+        companies.extend(funcoes.get_companies(details,lim_vagas))
+        locais.extend(funcoes.get_locals(details,lim_vagas))
+        descricoes.extend(funcoes.get_descricao(links,lim_vagas))
+        tags.extend(funcoes.get_tags(details,descricoes))
+        salaries.extend(funcoes.get_salario(links))
+        regimes.extend(funcoes.get_regime(funcoes.soup_label(soup),lim_vagas))
+        periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup),lim_vagas))
+        #verifica data e controla o loop para a alteracao de paginas buscadas
+        if (date_verification(dates[-1], lim) == False and lim_vagas == 0):
             print("Breaking in page: %s" % str(page + 1))
             print(dates[-1])
             break
-        page += 1
 
+        page += 1
 
     vagas = {}
 
@@ -77,33 +83,11 @@ def get_vagas(lim=2):
             # vagas.append(vagas_dict)
 
             vagas = {**vagas, **vagas_dict}
+
     return vagas
 
 
-def vagas_to_json(vagas_dict):
-    with open('vagas.json', 'w') as json_file:
-        json.dump(vagas_dict, json_file, ensure_ascii=False)
-    
 
-def last_sended():
-  arquivo = './files/last_sended.txt'
-
-  try:
-    flag_permission = 'r'
-    file = open(arquivo, flag_permission)
-    print(file.readlines())
-  except:
-    flag_permission = 'w'
-    file = open(arquivo, flag_permission)
-    file.write('2233')
-    
-  finally:
-    file.close()
-
-
-
-
-  
 
 
 def date_verification(data_vaga, lim=2):
@@ -117,7 +101,3 @@ def date_verification(data_vaga, lim=2):
         return True
     else:
         return False
-
-
-
-last_sended()
