@@ -18,15 +18,16 @@ logger = logging.getLogger(__name__)
 
 # Função chamada no /start
 def start(update, context):
-    keyboard = [[InlineKeyboardButton("Obter vaga recente", callback_data='obter_vaga'),
-                 InlineKeyboardButton("Filtrar por área", callback_data='filtrar_area')]
-                ]
+    keyboard = [[InlineKeyboardButton(
+        "Filtrar por tag", callback_data='filtrar_area')]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     update.message.reply_text('Escolha uma opção:', reply_markup=reply_markup)
 
 # Função para retornar ao /start
+
+
 def start_over(update, context):
     query = update.callback_query
 
@@ -45,6 +46,8 @@ def start_over(update, context):
     )
 
 # Inicia a conversa para filtrar vagas
+
+
 def iniciar_filtrar_area(update, context):
     query = update.callback_query
 
@@ -53,36 +56,37 @@ def iniciar_filtrar_area(update, context):
     bot.edit_message_text(
         chat_id=query.message.chat_id,
         message_id=query.message.message_id,
-        text="Certo, qual área?"
+        text="Certo, qual tag?"
     )
 
 # filtra vagas pela tag (IMPLEMENTAR AS TAGS AQUI)
+
+
 def filtrar_area(update, context):
     text = update.message.text
     print(text)
-    if text == 'python':
-        update.message.reply_text('Funcionou!')
 
-# Retorna uma vaga (IMPLEMENTAR JSON DAS VAGAS)
-def retornar_vaga(update, context):
-    query = update.callback_query
+    keyboard = [[InlineKeyboardButton("Carregar mais", callback_data='load_more')],
+                [InlineKeyboardButton(
+                    "Retornar ao ínicio", callback_data='start_over')]
+                ]
 
-    bot = context.bot
-
-    keyboard = [
-        [InlineKeyboardButton("Carregar mais", callback_data='load_more'),
-         InlineKeyboardButton("Retornar ao ínicio", callback_data='start_over')]
-    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    bot.edit_message_text(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        text='vaga 1',
-        reply_markup=reply_markup
-    )
+    if text == 'python':
+        update.message.reply_text('Clique em um dos códigos abaixo para exibir a vaga\n\n/{} {}\n\n/{} {}\n\n/{} {}\n\n/{} {}\n\n/{} {}\n\n'.format('0522', ' 1titulo',
+                                                                                                                                                    '2codigo', ' 2titulo', '3codigo', ' 3titulo', '4codigo', ' 4titulo', '5codigo', ' 5titulo'), reply_markup=reply_markup)
+
+# Retorna uma vaga (IMPLEMENTAR JSON DAS VAGAS)
+
+
+def retornar_vaga(update, context):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text="Vaga retornada")
 
 # Atualiza a mensagem com outra vaga (IMPLEMENTAR JSON DAS VAGAS)
+
+
 def load_more(update, context):
     query = update.callback_query
 
@@ -107,6 +111,8 @@ def help(update, context):
     update.message.reply_text("Use /start para iniciar o bot")
 
 # Exibe uns log loco que eu não sei usar
+
+
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -118,6 +124,8 @@ def main():
 
     # Inicia as funções
     updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(
+        CommandHandler('{}'.format('0522'), retornar_vaga))
     updater.dispatcher.add_handler(CallbackQueryHandler(
         retornar_vaga, pattern='^' + 'obter_vaga' + '$'))
     updater.dispatcher.add_handler(CallbackQueryHandler(
