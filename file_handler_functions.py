@@ -1,6 +1,6 @@
 import json
-
-def read_from_json():
+import os 
+def read_code_from_json():
 
     with open('./files/vagas.json') as file_data:
         vagas = json.load(file_data)
@@ -9,20 +9,46 @@ def read_from_json():
 
 
 
-def last_sendend_verification(code):
+def last_sendend_verification(code=None):
     arquivo = './files/last_sended.txt'
-    try:
-        file = open(arquivo, 'r')
-        last_code = file.readlines()[0]
-        print(last_code,code)
-        file.close()
-        if code == last_code :
-            return False
-        
-    except :
-        file = open(arquivo, 'w')
-        file.write(read_from_json())
+    while True:
+            
+        try:
+            file = open(arquivo, 'r')  
+            last_code = file.readlines()[0]
+            
+            break
+        except :
+            file = open(arquivo, 'w')
+            print('Creating a file with the last code')
+            file.write(read_code_from_json())
 
+
+    file.close()
+    if code == last_code :
+        return False   
+    else:
         return True
 
-last_sendend_verification(code)
+
+def vagas_to_json(vagas_dict):
+    file_name = './files/vagas.json'
+    data = vagas_dict
+    if os.path.exists(file_name):
+        with open(file_name) as json_file:
+            data = json.load(json_file)
+            data.update(vagas_dict)
+
+    with open(file_name, 'w') as f:
+        json.dump(data, f, ensure_ascii=False)
+
+        
+def read_last_code():
+    arquivo = './files/last_sended.txt'
+    file = open(arquivo, 'r')  
+    last_code = file.readlines()[0]
+    return last_code
+    
+def deletar_txt():
+    arquivo = './files/last_sended.txt'
+    os.remove(arquivo)

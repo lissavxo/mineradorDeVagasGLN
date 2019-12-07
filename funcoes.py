@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-
+import file_handler_functions as files
 # ------------------------------------------------------------------------------------------------------------
 # funçao para retornar uma soup de toda a pagina a partir da url
 def get_soup(url):
@@ -116,7 +116,7 @@ def get_codes(soup_box,lim_vagas= 0):
         code = list(box.get('id'))
         del code[0:5]
         code = ''.join(code)
-        if last_sendend_verification(code) == False:
+        if files.last_sendend_verification(code) == False:
             return codes , True # keep atention HEERE  
         codes.append(int(code))
     return codes , False
@@ -245,11 +245,30 @@ def get_companies(soup_details,lim_vagas= 0):
 def get_locals(soup_details,lim_vagas= 0):
     locais = []
     controle_tamanho = len(soup_details)
+    internal_value = lim_vagas
+    internal_count = 0
+    internal_bol = False
+    if internal_value != 0:
+        internal_bol = True
+    
+   
     for indice in range(1, controle_tamanho, 3):
-        local = list(soup_details[indice])
-        del local[0:9]
-        local = ''.join(local)
-        locais.append(local)
+   #---------------------------------------
+        def my_work():
+            local = list(soup_details[indice])
+            del local[0:9]
+            local = ''.join(local)
+            locais.append(local)
+            # --------
+        if internal_bol:
+            if internal_count < lim_vagas:
+                my_work()
+            else:
+                return locais
+            internal_count+=1
+        else:
+            my_work()      
+
     return locais
 
 
