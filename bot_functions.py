@@ -18,4 +18,20 @@ def vagas_to_send():
     return keys_to_send
             
 
+def filter_vagas(tag):
+    arquivo = './files/vagas.json'
+    tags_to_send = []
+    with open(arquivo) as json_file:
+        vagas = json.load(json_file)
+
+        for code_vaga in vagas:
+            Tags = vagas[code_vaga]['Tag']
+            
+
+            for vaga_tag in Tags:
+                if vaga_tag == tag:
+                    tags_to_send.append(code_vaga)  
+                    break
+    return tags_to_send
+
 
