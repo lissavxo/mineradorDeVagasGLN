@@ -8,19 +8,23 @@
 import telegram
 import json
 import bot_functions as bf
+import file_handler_functions as files
 def main():
     bot = telegram.Bot('835018973:AAGk01FZbqkBQdR5JJ6s3V5U4s8BmjuEsbw')
 
-    with open('./files/vagas.json') as file_data:
-        vagas = json.load(file_data)
-        keys = bf.vagas_to_send()
-        for key in keys:
-            vaga = vagas[key]
-            print('sending -:' ,key)
-            message = '{}\n{} - {} - {}\n{}\n{}\n{} - {}\n\n'.format(vaga['Titulo'],vaga["Data"],vaga["Empresa"],vaga["Local"],vaga["Salary"],vaga[ "Regime"],vaga["Período"],vaga["Link"])
+    # with open('./files/vagas.json') as file_data:
+    #     vagas = json.load(file_data)
+    #     keys = bf.vagas_to_send()
+    #     for key in keys:
+    #         vaga = vagas[key]
+    #         print('sending -:' ,key)
+    #         message = bf.formated_vaga(vaga)
 
-
-            bot.sendMessage(-1001494820086,message)
+    vagas_to_send_keys = bf.vagas_to_send()
+    for key in vagas_to_send_keys:
+        vaga =  files.get_vaga(key)
+        message = bf.formated_vaga(vaga)
+        bot.sendMessage(-1001494820086,message)
 
 # if __name__ == '__main__':
 #     main()

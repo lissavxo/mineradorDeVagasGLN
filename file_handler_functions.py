@@ -1,5 +1,7 @@
 import json
 import os 
+import bot_functions as bf
+import file_handler_functions as files
 def read_code_from_json():
     
     if os.path.exists('./files/vagas.json'):
@@ -68,3 +70,32 @@ def read_all_keys():
         keys = list(data.keys())
     
     return keys
+
+def get_vaga(code):
+    vaga = None
+    with open('./files/vagas.json') as file_data:
+        vagas = json.load(file_data)
+        keys = files.read_all_keys()
+        for key in keys:
+            print(type(key),type(code))
+            if key == code:
+                vaga = vagas[key]
+
+    return vaga
+
+def create_txt(content):
+    file = open('./files/temporary.txt', 'w')
+    file.write(content)
+    file.close()
+
+
+def read_temporary_txt():
+    file = open('./files/temporary.txt', 'r')
+    var  = file.readlines()[0]
+    file.close()
+    return var
+
+def delete_temporary_txt():
+    arquivo = '/home/guilherme/Documentos/Projetos/python/mineradorDeVagasGLN/files/temporary.txt'
+    os.remove(arquivo)
+    
