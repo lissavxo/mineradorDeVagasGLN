@@ -109,17 +109,20 @@ def get_links(soup,lim_vagas= 0):
 # funcao retorna lista de codigos da vaga
 def get_codes(soup_box,lim_vagas= 0):
 
-
-
     codes = []
+    codes_temp = []
+    status = True
+    
     for box in soup_box:
         code = list(box.get('id'))
         del code[0:5]
         code = ''.join(code)
         if files.last_sendend_verification(code) == False:
-            return codes , True # keep atention HEERE  
-        codes.append(int(code))
-    return codes , False
+            codes = codes_temp
+            status = False
+        codes.append(code)
+
+    return codes , status
 
 
 

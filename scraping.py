@@ -25,25 +25,44 @@ def get_vagas(lim=2):
     page = 1
     while (True):
 
-        print("Page: %s" % page)
-        # atribuindo valores as variaveis atributos
+        # variaveis de controle 
+        b = 1 
+        _b = 1
+      
+
+        # variaveis com objetos soup 
         soup = funcoes.get_soup(
             'https://empregos.profissionaisti.com.br/vagas/distrito-federal/' +
             '?p=' + str(page))
-
-        # funcoes que se repetem 
-
         details = funcoes.soup_details(soup)
+        box = funcoes.soup_box(soup)
+        
+        
+        print("Page: %s" % page)
 
-        # testanto o tamanho da lista de codes 
-        _codes = funcoes.get_codes(funcoes.soup_box(soup))
+        
+        _codes = funcoes.get_codes(box)
         codes_bool = _codes[1]
         _codes = _codes[0]
         lim_vagas = 0
-        if codes_bool:
+        if codes_bool == False:
             lim_vagas = len(_codes)
+            _b = 0
+
+
+        # for c in _codes: 
+        #     if str(c) in files.read_all_keys():
+        #         if _codes.index(c) == 0:
+        #             b = 0
+        #         print( 'entrou')
+        #         cont +=1
         
-        titles.extend(funcoes.get_titles( funcoes.soup_box(soup) ,lim_vagas))
+        # if cont > 1:
+        #     print('again')
+        #     lim_vagas = cont
+        #     _codes = _codes[:cont]
+
+        titles.extend(funcoes.get_titles( box ,lim_vagas))
         links.extend(funcoes.get_links(soup,lim_vagas))
         codes.extend(_codes)
         dates.extend(funcoes.get_dates(soup,lim_vagas))
@@ -54,8 +73,10 @@ def get_vagas(lim=2):
         salaries.extend(funcoes.get_salario(links))
         regimes.extend(funcoes.get_regime(funcoes.soup_label(soup),lim_vagas))
         periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup),lim_vagas))
+    
+        print(b)
         #verifica data e controla o loop para a alteracao de paginas buscadas
-        if (date_verification(dates[-1], lim) == False and lim_vagas == 0):
+        if (date_verification(dates[-1], lim) == False or _b==0):
             print("Breaking in page: %s" % str(page + 1))
             print(dates[-1])
             break
