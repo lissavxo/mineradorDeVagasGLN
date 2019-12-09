@@ -304,9 +304,10 @@ def get_tags(soup_details, descricoes):
             lista_linhas.append(line)
 
     # Compara a lista de palavras da descrição da vaga com a lista do tags_banco
-    lista_tags_2 = []
+    
     for lista in listona:
         for frase in lista:
+            lista_tags_2 = []
             for palavra in frase:
                 if palavra in lista_linhas:
                     lista_tags_2.append(palavra)

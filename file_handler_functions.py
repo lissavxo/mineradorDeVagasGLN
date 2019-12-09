@@ -77,7 +77,6 @@ def get_vaga(code):
         vagas = json.load(file_data)
         keys = files.read_all_keys()
         for key in keys:
-            print(type(key),type(code))
             if key == code:
                 vaga = vagas[key]
 

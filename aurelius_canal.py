@@ -21,10 +21,11 @@ def main():
     #         message = bf.formated_vaga(vaga)
 
     vagas_to_send_keys = bf.vagas_to_send()
+    
     for key in vagas_to_send_keys:
-        vaga =  files.get_vaga(key)
-        message = bf.formated_vaga(vaga)
-        bot.sendMessage(-1001494820086,message)
+        # vaga =  files.get_vaga(key)
+        message = bf.formated_vaga(key)
+        bot.sendMessage(-1001394339859,message)
 
 # if __name__ == '__main__':
 #     main()

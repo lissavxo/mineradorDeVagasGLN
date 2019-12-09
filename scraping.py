@@ -63,13 +63,15 @@ def get_vagas(lim=2):
         #     _codes = _codes[:cont]
 
         titles.extend(funcoes.get_titles( box ,lim_vagas))
-        links.extend(funcoes.get_links(soup,lim_vagas))
+        new_link = funcoes.get_links(soup,lim_vagas)
+        links.extend(new_link)
         codes.extend(_codes)
         dates.extend(funcoes.get_dates(soup,lim_vagas))
         companies.extend(funcoes.get_companies(details,lim_vagas))
         locais.extend(funcoes.get_locals(details,lim_vagas))
-        descricoes.extend(funcoes.get_descricao(links,lim_vagas))
-        tags.extend(funcoes.get_tags(details,descricoes))
+        new_descricoes = funcoes.get_descricao(new_link,lim_vagas)
+        descricoes.extend(new_descricoes)
+        tags.extend(funcoes.get_tags(details,new_descricoes))
         salaries.extend(funcoes.get_salario(links))
         regimes.extend(funcoes.get_regime(funcoes.soup_label(soup),lim_vagas))
         periodos.extend(funcoes.get_periodo(funcoes.soup_label(soup),lim_vagas))

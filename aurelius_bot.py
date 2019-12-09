@@ -21,11 +21,15 @@ logger = logging.getLogger(__name__)
 # Função chamada no /start
 def start(update, context):
     keyboard = [[InlineKeyboardButton(
-        "Filtrar por tag", callback_data='filtrar_area')]]
+        "Tecnologias", callback_data='filtrar_area')],
+        [InlineKeyboardButton(
+        "Locais", callback_data='filtrar_locais')],
+        [InlineKeyboardButton(
+        "Área de atuação", callback_data='filtrar_ada')]] 
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text('Escolha uma opção:', reply_markup=reply_markup)
+    update.message.reply_text('Olá {}, eu sou o Aurelius!\n\nPosso te ajudar a encontrar vagas de TI na área que você procura ou que requisitam a tecnologia que você deseja!\n\nSelecione um dos filtros abaixo:'.format(update.message.from_user.first_name), reply_markup=reply_markup)
 
 # Função para retornar ao /start
 
@@ -35,10 +39,12 @@ def start_over(update, context):
 
     bot = context.bot
 
-    keyboard = [
-        [InlineKeyboardButton("Filtrar por área",
-                              callback_data='filtrar_area')]
-    ]
+    keyboard = [[InlineKeyboardButton(
+        "Tecnologias", callback_data='filtrar_area')],
+        [InlineKeyboardButton(
+        "Locais", callback_data='filtrar_locais')],
+        [InlineKeyboardButton(
+        "Área de atuação", callback_data='filtrar_ada')]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.edit_message_text(
@@ -80,7 +86,6 @@ def dict_treatment(dict_vagas):
 def filtrar_area(update, context):
     text = update.message.text
     files.create_txt(text)
-    print(text)
 
     keyboard = [[InlineKeyboardButton("Carregar mais", callback_data='load_more')],
                 [InlineKeyboardButton(
@@ -91,7 +96,7 @@ def filtrar_area(update, context):
 
     dict_vagas = bf.filter_vagas(text.lower())
     if dict_vagas == {}:
-        _message = 'Nao encontrei nada aqui. Tente pesquisar por outra palavra relacionada'
+        _message = 'Não encontrei nada aqui. Tente pesquisar por outra palavra relacionada'
     else:
         dict_vagas = dict_treatment(dict_vagas)
         _message = '\n'.join('/{}'.format(k) for k in dict_vagas)
@@ -104,7 +109,6 @@ def filtrar_area(update, context):
 
     update.message.reply_text(_message, reply_markup=reply_markup)
 
-# Retorna uma vaga (IMPLEMENTAR JSON DAS VAGAS)
 
 
 def retornar_vaga(update, context):
@@ -117,8 +121,6 @@ def retornar_vaga(update, context):
     print(message)
     context.bot.send_message(
         chat_id=update.effective_chat.id, text=message, callback_data='lissa')
-
-# Atualiza a mensagem com outra vaga (IMPLEMENTAR JSON DAS VAGAS)
 
 
 def load_more(update, context):
@@ -145,8 +147,6 @@ def load_more(update, context):
 #Função /help
 def help(update, context):
     update.message.reply_text("Use /start para iniciar o bot")
-
-# Exibe uns log loco que eu não sei usar
 
 
 def error(update, context):
